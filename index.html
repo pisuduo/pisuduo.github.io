@@ -214,6 +214,24 @@
         </li>
       
         
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
@@ -244,6 +262,150 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/Function Optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Pisuduo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo-Pisuduo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/09/Function Optimization/" itemprop="url">Simulated Annealing</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-09T10:57:00-05:00">2018-03-09</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Simulated Annealing</p>
+<p>Goal: Maximize the function <span class="math inline">\(f(\theta)\)</span> w.r.t <span class="math inline">\(\theta\)</span><br>
+A typicial heuristic search algorithm involves the following steps:<br>
+1. Initialize <span class="math inline">\(\theta_0\)</span><br>
+2. Given <span class="math inline">\(\theta_t\)</span>, propose a new value <span class="math inline">\(\theta^{*}=g(\theta_t)\)</span>, where <span class="math inline">\(g(.)\)</span> is the proposal function<br>
+3. <span class="math inline">\(\theta_{t+1}=\theta^{*}\)</span> if <span class="math inline">\(f(\theta^{*})&gt;f(\theta_t)\)</span>. Otherwise, <span class="math inline">\(\theta_{t+1}=\theta_t\)</span><br>
+4. Repeat step 1-3, until <span class="math inline">\(\mid \theta_{t+1}-\theta_t\mid&lt;\epsilon\)</span></p>
+<p>However, this algorithm never accepts a downwards move, and can easily be stucked by a local maximum. By giving downhill move a certain probability, we can overcome this problem. For example, in step 3 above, we can modify it to be: <span class="math inline">\(\theta_{t+1}=\theta^{*}\)</span> with prob=min<span class="math inline">\(\{1, e^{f(\theta^*)-f(\theta_t)}\}\)</span>, i.e., <span class="math inline">\(p=1\)</span> if <span class="math inline">\(f(\theta^*)&gt;f(\theta_t)\)</span> and <span class="math inline">\(p=e^{f(\theta^*)-f(\theta_t)}\)</span> if <span class="math inline">\(f(\theta^*) \leq f(\theta_t)\)</span>.</p>
+<p>However, if the curve of <span class="math inline">\(f(.)\)</span> involves many steep curves and valleys, <span class="math inline">\(e^{f(\theta^*)-f(\theta_t)}\)</span> can be very small, which will cause the downhill probability very small, and the downhill move would be rarely accepted. Solution: change the accepting probability to <span class="math inline">\(e^{\{f(\theta^*)-f(\theta_t)\}/T}\)</span>. In the case when <span class="math inline">\(f(\theta^*)\)</span> is much smaller than <span class="math inline">\(f(\theta_t)\)</span> , if <span class="math inline">\(T&gt;1\)</span>, then the difference between <span class="math inline">\(f(\theta^*)\)</span> and <span class="math inline">\(f(\theta_t)\)</span> is shrinked and downhill accepting probability is therefore increased. If <span class="math inline">\(T&lt;1\)</span>, the difference is enlarged and downhill accepting probability is therefore reduced. Note that as <span class="math inline">\(T \to \infty\)</span>, all the downhill moves are accepted; as <span class="math inline">\(T \to 0\)</span>, all the downhill moves are rejected. High temperature can help move, and low temperature can find the local maximum.</p>
+<p>Solution-Simulated Annealing: Start with high temperature and gradually decreasing to low temperature, i.e.:</p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(\theta_0\)</span><br>
+</li>
+<li>Given <span class="math inline">\(\theta_t\)</span>, propose a new value <span class="math inline">\(\theta^{*}=g(\theta_t)\)</span>, where <span class="math inline">\(g(.)\)</span> is the proposal function<br>
+</li>
+<li><span class="math inline">\(\theta_{t+1}=\theta^{*}\)</span> with prob=min<span class="math inline">\(\{1, e^{\{f(\theta^*)-f(\theta_t)\}/T_j}\}\)</span></li>
+<li>Repeat step 2-3 for <span class="math inline">\(m_j\)</span> times</li>
+<li>Updata <span class="math inline">\(T_{j+1}=\alpha(T_j)\)</span> and <span class="math inline">\(m_{j+1}=\beta(m_j)\)</span></li>
+<li>Stop if <span class="math inline">\(T_{j+1}&lt;\epsilon\)</span></li>
+</ol>
+<p>Usually, <span class="math inline">\(\alpha(T_j)=aT_j\)</span> for <span class="math inline">\(a&lt;1 \ (&gt;0.9)\)</span> and <span class="math inline">\(\beta(m_j)=bm_j\)</span> for <span class="math inline">\(b&gt;1\)</span>. (Or, <span class="math inline">\(\alpha(T_j)=\frac{T_j}{1+aT_j}\)</span> for a small <span class="math inline">\(a\)</span>, <span class="math inline">\(\beta(m_j)=1\)</span>).</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -330,11 +492,8 @@
       
         
           
-            <p>Notes from Machine Learning by Coursera.<br>Week 7- Support Vector Machine</p>
-<ol>
-<li>Cost Function<br>The cost function for support vector machine is:<br>$$C\sum_{i=1}^{m}[y^{(i)}cost_1(\theta^Tx^{(i)})+(1-y^{(i)})cost_0(\theta^Tx^{(i)})]+\frac{1}{2}\sum_{i=1}^{m}\theta_j^2 $$</li>
-</ol>
-<p>$$a+b=c$$</p>
+            <p>Notes from Machine Learning by Coursera. Week 7- Support Vector Machine 1. Cost Function The cost function for support vector machine is: <span class="math display">\[C\sum_{i=1}^{m}[y^{(i)}cost_1(\theta^Tx^{(i)})+(1-y^{(i)})cost_0(\theta^Tx^{(i)})]+\frac{1}{2}\sum_{i=1}^{m}\theta_j^2 \]</span></p>
+<p><span class="math display">\[a+b=c\]</span></p>
 
           
         
@@ -458,7 +617,7 @@
       
         
           
-            <p>lalal this is my first post<br>can I type math formulas:<br>simple inline $a+b=c$</p>
+            <p>lalal this is my first post can I type math formulas: simple inline <span class="math inline">\(a+b=c\)</span></p>
 
           
         
@@ -583,13 +742,18 @@
         
           
             <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
           
@@ -672,7 +836,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -680,6 +844,21 @@
 
               
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
               
             </nav>
           
@@ -891,6 +1070,8 @@
     
       
         
+      
+    
       
     
       
